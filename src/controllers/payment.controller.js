@@ -1,7 +1,10 @@
 import Stripe from 'stripe';
 import { supabase } from '../config/supabase.js';
+import { updateSubscription } from './profile.controller.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
+
 
 export const createCheckoutSession = async (req, res) => {
   try {
@@ -88,6 +91,7 @@ export const handleWebhook = async (req, res) => {
   let event;
 
   try {
+    // Validar a assinatura do webhook usando o corpo bruto da requisição
     event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
   } catch (err) {
     console.error('Webhook signature verification failed:', err.message);
@@ -95,12 +99,13 @@ export const handleWebhook = async (req, res) => {
   }
 
   try {
+    // Processar os diferentes tipos de eventos enviados pelo Stripe
     switch (event.type) {
       case 'checkout.session.completed': {
-        const session = event.data.object;
+        const session = event.data.object; // Objeto de sessão do Stripe
         const customerId = session.customer;
 
-        // Update user subscription status
+        // Atualizar o status da assinatura do cliente no Supabase
         const { data: profile } = await supabase
           .from('profiles')
           .select('id')
@@ -118,10 +123,10 @@ export const handleWebhook = async (req, res) => {
 
       case 'customer.subscription.deleted':
       case 'customer.subscription.updated': {
-        const subscription = event.data.object;
+        const subscription = event.data.object; // Objeto de assinatura do Stripe
         const customerId = subscription.customer;
 
-        // Update user subscription status
+        // Atualizar o status da assinatura do cliente no Supabase
         const { data: profile } = await supabase
           .from('profiles')
           .select('id')
@@ -137,8 +142,13 @@ export const handleWebhook = async (req, res) => {
         }
         break;
       }
+
+      // Adicionar outros eventos relevantes do Stripe se necessário
+      default:
+        console.log(`Unhandled event type ${event.type}`);
     }
 
+    // Confirmar o recebimento do webhook
     res.json({ received: true });
   } catch (error) {
     console.error('Webhook processing error:', error);

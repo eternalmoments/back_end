@@ -9,18 +9,26 @@ dotenv.config();
 
 const app = express();
 
-
+app.use('/api/payment/webhook', express.raw({ type: 'application/json' }));
 app.use(cors());
 app.use(express.json());
 
 
-app.use('/api/payment/webhook', express.raw({ type: 'application/json' }));
+
 
 
 app.use('/api/auth', authRoutes);
 app.use('/api/payment', paymentRoutes);
 app.use('/api/profile', profileRouter);
 app.use('/api/sites', SitesRoutes);
+app.use((req, res, next) => {
+  if (req.originalUrl === '/api/payments/webhook') {
+    // Ignorar o processamento JSON para o webhook
+    next();
+  } else {
+    express.json()(req, res, next);
+  }
+});
 
 
 app.get('/health', (req, res) => {
