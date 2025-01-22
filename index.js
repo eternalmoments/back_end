@@ -4,7 +4,9 @@ import dotenv from 'dotenv';
 import authRoutes from './src/routes/auth.routes.js';
 import paymentRoutes from './src/routes/payment.routes.js';
 import profileRouter  from './src/routes/profileRouter.js'
-import SitesRoutes from './src/routes/sites.roter.js'
+import SitesRoutes from './src/routes/sites.roter.js';
+import StarChartrouter from './src/routes/starchartroute.js'
+
 dotenv.config();
 
 const app = express();
@@ -21,6 +23,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/payment', paymentRoutes);
 app.use('/api/profile', profileRouter);
 app.use('/api/sites', SitesRoutes);
+app.use('/api/star_chart', StarChartrouter);
 app.use((req, res, next) => {
   if (req.originalUrl === '/api/payments/webhook') {
     // Ignorar o processamento JSON para o webhook
