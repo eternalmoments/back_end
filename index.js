@@ -5,7 +5,8 @@ import authRoutes from './src/routes/auth.routes.js';
 import paymentRoutes from './src/routes/payment.routes.js';
 import profileRouter  from './src/routes/profileRouter.js'
 import SitesRoutes from './src/routes/sites.roter.js';
-import StarChartrouter from './src/routes/starchartroute.js'
+import StarChartrouter from './src/routes/starchartroute.js';
+import photosRouter from './src/routes/photosRouter.js';
 
 dotenv.config();
 
@@ -18,7 +19,7 @@ app.use(express.json());
 
 
 
-
+app.use('/api/photos', photosRouter);
 app.use('/api/auth', authRoutes);
 app.use('/api/payment', paymentRoutes);
 app.use('/api/profile', profileRouter);

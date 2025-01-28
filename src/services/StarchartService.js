@@ -5,6 +5,7 @@ const API_SECRET = process.env.ASTRONOMY_API_SECRET;
 const BASE_URL = 'https://api.astronomyapi.com/api/v2';
 
 const authString = Buffer.from(`${API_ID}:${API_SECRET}`).toString('base64');
+console.log("LOGANDO STRING AUTH API ESTRELAS" ,authString);
 
 const api = axios.create({
   baseURL: BASE_URL,
