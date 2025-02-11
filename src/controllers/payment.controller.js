@@ -9,64 +9,69 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 export const createCheckoutSession = async (req, res) => {
   try {
     const { priceId, successUrl, cancelUrl, userId, mode } = req.body;
-    console.log("LOGANDO PRICEID",priceId);
+    console.log("LOGANDO userId antes de criar a sessão:", userId);
+
+   
+    if (!userId) {
+      return res.status(400).json({ error: "userId é obrigatório" });
+    }
+
     
-    // Get user profile
     const { data: profile } = await supabase
-      .from('profiles')
-      .select('stripe_customer_id')
-      .eq('id', userId)
+      .from("profiles")
+      .select("stripe_customer_id, email")
+      .eq("id", userId)
       .single();
 
     let customerId = profile?.stripe_customer_id;
 
-    // If user doesn't have a Stripe customer ID, create one
+   
     if (!customerId) {
-      const { data: userData } = await supabase
-        .from('profiles')
-        .select('email')
-        .eq('id', userId)
-        .single();
-
       const customer = await stripe.customers.create({
-        email: userData.email,
+        email: profile.email,
         metadata: {
-          supabase_user_id: userId
-        }
+          supabase_user_id: userId,
+        },
       });
 
       customerId = customer.id;
 
-      // Update user profile with Stripe customer ID
+     
       await supabase
-        .from('profiles')
+        .from("profiles")
         .update({ stripe_customer_id: customerId })
-        .eq('id', userId);
+        .eq("id", userId);
     }
 
-    // Create checkout session
+   
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
-      payment_method_types: ['card'],
+      payment_method_types: ["card"],
+      mode,
       line_items: [
         {
           price: priceId,
           quantity: 1,
         },
       ],
-      mode: mode,
+      client_reference_id: userId, 
+      metadata: {
+        userId, 
+      },
       success_url: successUrl,
       cancel_url: cancelUrl,
       allow_promotion_codes: true,
-      billing_address_collection: 'required',
+      billing_address_collection: "required",
     });
 
+    console.log("LOGANDO SESSION STRIPE", session);
     res.json({ sessionId: session.id });
   } catch (error) {
-    console.error('Checkout session error:', error);
-    res.status(500).json({ error: 'Failed to create checkout session' });
+    console.error("Checkout session error:", error);
+    res.status(500).json({ error: "Failed to create checkout session" });
   }
 };
+
 
 export const createPortalSession = async (req, res) => {
   try {
