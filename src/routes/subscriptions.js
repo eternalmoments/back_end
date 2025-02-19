@@ -1,7 +1,7 @@
 import express from 'express';
 import {
     getSubscriptionByUserId
-} from '../controllers/subscriptions';
+} from '../controllers/subscriptions.js';
 
 
 const router = express.Router();

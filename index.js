@@ -8,7 +8,7 @@ import SitesRoutes from './src/routes/sites.roter.js';
 import StarChartrouter from './src/routes/starchartroute.js';
 import photosRouter from './src/routes/photosRouter.js';
 import webHookRouter from './src/routes/webhooks.js';
-
+import subsCriptionsRouter from './src/routes/subscriptions.js';
 dotenv.config();
 
 const app = express();
@@ -20,7 +20,7 @@ app.use(express.json());
 
 
 
-
+app.use('/api/subs/',subsCriptionsRouter);
 app.use('/api/photos', photosRouter);
 app.use('/api/auth', authRoutes);
 app.use('/api/payment', paymentRoutes);
