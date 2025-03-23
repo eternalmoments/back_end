@@ -19,6 +19,7 @@ app.use(cors());
 app.use(express.json());
 
 
+console.log("LOGANDO PRICEIDS NO INDEX", process.env.VITE_STRIPE_PRICE_ID_3,process.env.VITE_STRIPE_PRICE_ID_2,process.env.VITE_STRIPE_PRICE_ID_1);
 
 app.use('/api/subs/',subsCriptionsRouter);
 app.use('/api/photos', photosRouter);
@@ -28,11 +29,11 @@ app.use('/api/profile', profileRouter);
 app.use('/api/sites', SitesRoutes);
 app.use('/api/star_chart', StarChartrouter);
 
-app.get('/health', (req, res) => {
+app.get('/api/health', (req, res) => {
   res.json({ status: 'ok' });
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = 3001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
