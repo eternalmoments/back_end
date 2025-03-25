@@ -79,3 +79,15 @@ export const deductSiteFromSubscription = async (req, res) => {
       return res.status(500).json({ error: 'Erro interno do servidor' });
   }
 };
+
+
+export const cancelSubscritpiton = async (req, res) => {
+  try {
+      const { user_id } = req.body;
+      if (!user_id) {
+        return res.status(400).json({ error: 'user_id é obrigatório' });
+      }
+  } catch (error) {
+    
+  }
+}

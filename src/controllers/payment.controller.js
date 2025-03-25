@@ -57,7 +57,11 @@ export const createCheckoutSession = async (req, res) => {
       success_url: successUrl,
       cancel_url: cancelUrl,
       customer: customerId,
-      client_reference_id: userId
+      client_reference_id: userId,
+      metadata: {
+        userId: userId,
+        mode: mode
+      }
     });
 
     console.log("LOG DA SESSION", session);

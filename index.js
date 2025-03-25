@@ -29,11 +29,13 @@ app.use('/api/profile', profileRouter);
 app.use('/api/sites', SitesRoutes);
 app.use('/api/star_chart', StarChartrouter);
 
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok' });
+app.get('/', (req, res) => {
+  res.json({ status: 'API RODANDO' });
 });
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
+export default app;

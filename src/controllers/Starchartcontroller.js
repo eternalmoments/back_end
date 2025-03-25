@@ -1,4 +1,4 @@
-import { getStarChartService, getCelestialBodiesService } from '../services/starChartService.js';
+import { getStarChartService, getCelestialBodiesService } from '../services/StarchartService.js';
 
 export const getStarChart = async (req, res) => {
   const { date, latitude, longitude } = req.body;
